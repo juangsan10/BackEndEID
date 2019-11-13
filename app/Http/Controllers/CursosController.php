@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\programas;
+use App\cursos;
+use App\personas_has_cursos;
 
-class ProgramasController extends Controller
+class CursosController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,16 +14,6 @@ class ProgramasController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        return programas::all();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
     {
         //
     }
@@ -35,20 +26,19 @@ class ProgramasController extends Controller
      */
     public function store(Request $request)
     {
-        $programa = new programas;
-        $programa->id_programa = $request->codigo;
-        $programa->nombre = $request->nombre;
-        $programa->descripcion = $request->descripcion;
-        $programa->save();
-        // {
-        //     return response()
-        //     ->json(['status' => '200', 'response' => 'Guardado']);
-        // }else
-        // {
-        //     return response()
-        //     ->json(['status' => '504', 'response' => 'No se pudo guardar']);
-        // }
+        $cursos =  new cursos;
+        $cursos->id_curso = $request->codigo;
+        $cursos->cupos = $request->cupos;
+        $cursos->nombre = $request->nombre;
+        $cursos->Programas_id_programa = $request->programa;
+        $cursos->save();
+        $matricula = new personas_has_cursos;
+        $matricula->Cursos_id_curso = $cursos->id_curso;
+        $matricula->Personas_numero_doc =$request->profesor;
+        $matricula->save();
+        
     }
+
 
     /**
      * Display the specified resource.
@@ -57,17 +47,6 @@ class ProgramasController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }

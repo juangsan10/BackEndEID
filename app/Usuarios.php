@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class grupos extends Model
+class Usuarios extends Model
 {
-    //
+    public $timestamps = false;
 }

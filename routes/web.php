@@ -27,3 +27,13 @@ Route::group(['prefix' => 'auth'], function () {
 Route::get('/prueba', 'PersonasController@prueba' );
 Route::resource('/guardar', 'PersonasController' );
 Route::resource('/programas', 'ProgramasController' );
+Route::apiResource('/profesores', 'ProfesoresController' );
+Route::apiResource('/usuario', 'UsuariosController' );
+Route::apiResource('/cursos', 'CursosController' );
+Route::apiResource('/noticias', 'NoticiasController' );
+Route::apiResource('/estudiantes', 'EstudiantesController' );
+Route::post('/documentos/{id}', 'EstudiantesController@storeDocuments' );
+Route::get('/documentos/{id}', 'EstudiantesController@getDocuments' );
+
+
+

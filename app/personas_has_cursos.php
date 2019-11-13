@@ -4,7 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class programas extends Model
+class personas_has_cursos extends Model
 {
+    //
     public $timestamps = false;
 }
