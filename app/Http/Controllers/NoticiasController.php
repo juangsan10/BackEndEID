@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\noticias;
+use App\Usuarios;
 class NoticiasController extends Controller
 {
     /**
@@ -24,7 +25,15 @@ class NoticiasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $noticias = new noticias;
+
+        $usuario = Usuarios::where('correo', $request->correo)->first();
+        $noticias->contenido = $request->contenido;
+        $noticias->subtitulo = $request->subtitulo;
+        $noticias->tema = $request->tema;
+        $noticias->titutlo = $request->titulo;
+        $noticias->Usuarios_id_usuario = $usuario->id_usuario;
+        $noticias->save();
     }
 
     /**
@@ -61,3 +70,4 @@ class NoticiasController extends Controller
         //
     }
 }
+

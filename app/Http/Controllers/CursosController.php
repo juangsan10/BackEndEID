@@ -15,7 +15,7 @@ class CursosController extends Controller
      */
     public function index()
     {
-        //
+        return cursos::all();
     }
 
     /**
