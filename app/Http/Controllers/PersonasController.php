@@ -67,7 +67,6 @@ class PersonasController extends Controller
         $personas->actividad_deportiva = $request->actividad_deportiva;
         $personas->empresa_usuario = $request->empresa_usuario;
         $personas->foto = $request->foto;
-        $personas->Personas_numero_doc = $request->Personas_numero_doc;
         $personas->save();
     }
 

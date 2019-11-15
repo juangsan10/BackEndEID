@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\documentos;
+use App\personas;
 
 class EstudiantesController extends Controller
 {
@@ -32,7 +33,75 @@ class EstudiantesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $estudiante = new personas;
+        $estudiante->tipo_doc=  $request->tipoDocumento;
+        $estudiante->numero_doc= $request->numeroDocumento;
+        $estudiante->lugarExpedicion_doc = $request->lugarExpedicionDocumento;
+        $estudiante->nombre_completo = $request->nombreCompleto;
+        $estudiante->apellidos =$request->apellidos;
+        $estudiante->fecha_nacimiento = $request->fechaNacimiento;
+        $estudiante->lugar_nacimiento = $request->lugarNacimiento;
+        $estudiante->genero = $request->genero;
+        $estudiante->telefono = $request->telefono;
+        $estudiante->correo = $request->correo;
+        $estudiante->estudia =$request->estudia;
+        $estudiante->grado_escolar = $request->gradoEscolar;
+        $estudiante->nombre_establecimiento = $request->nombreEstablecimiento;
+        $estudiante->tipo_establecimiento =$request->tipoEstablecimiento;
+        $estudiante->eps =$request->eps;
+        $estudiante->nombre_padre=$request->nombrePadre;
+        $estudiante->telefono_padre =$request->celularPadre;
+        $estudiante->nombre_madre =$request->nombreMadre;
+        $estudiante->telefono_madre = $request->celularMadre;
+        $estudiante->nombre_acudiente = $request->nombreAcudiente;
+        $estudiante->celular_acudiente = $request->celular;
+        //emailAddress correo acudiente
+        $estudiante->empresa = $request->empresa;
+        $estudiante->tipo_vinsulacion = $request->tipoVinculacion;
+        $estudiante->programa = $request->programa;
+        $estudiante->documentos = $request->documentos;
+        $estudiante->foto = $request->foto;
+        $estudiante->Usuarios_id_usuario = 2;
+        $estudiante->save();
+//direccionResidencia: null
+//parentezco: null
+
+/*      $estudiante = new personas;
+        $estudiante->tipo_doc=  $request->tipoDocumento;
+        $estudiante->numero_doc= $request->numeroDocumento;
+        $estudiante->lugarExpedicion_doc = $request->lugarExpedicionDocumento;
+        $estudiante->nombre_completo = $request->nombreCompleto;
+        $estudiante->apellidos =$request->apellidos;
+        $estudiante->fecha_nacimiento = $request->fechaNacimiento;
+        $estudiante->lugar_nacimiento = $request->lugarNacimiento;
+        $estudiante->genero = $request->genero;
+        $estudiante->telefono = $request->telefono;
+        $estudiante->correo = $request->correo;
+        $estudiante->estudia =$request->estudia;
+        $estudiante->grado_escolar = $request->gradoEscolar;
+        $estudiante->nombre_establecimiento = $request->nombreEstablecimiento;
+        $estudiante->tipo_establecimiento =$request->tipoEstablecimiento;
+        $estudiante->eps =$request->eps;
+        $estudiante->nombre_padre=$request->nombrePadre;
+        $estudiante->telefono_padre =$request->celularPadre;
+        $estudiante->nombre_madre =$request->nombreMadre;
+        $estudiante->telefono_madre = $request->celularMadre;
+        $estudiante->nombre_acudiente = $request->nombreAcudiente;
+        $estudiante->celular_acudiente = $request->celular;
+
+        //emailAddress correo acudiente
+        $estudiante->empresa = $request->empresa;
+        $estudiante->tipo_vinsulacion = $request->tipoVinculacion;
+        $estudiante->programa = $request->programa;
+        $estudiante->documentos = $request->documentos;
+        $estudiante->antecedentes_salud = $request->antecedentes_salud;
+        $estudiante->actividad_deportiva = $request->actividad_deportiva;
+        $estudiante->empresa_usuario = $request->empresa_usuario;
+        $estudiante->foto = $request->foto;
+        $estudiante->Personas_numero_doc = $request->Personas_numero_doc;
+        $estudiante->save();
+ */
+
     }
 
     /**
