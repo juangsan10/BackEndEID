@@ -22,10 +22,11 @@ class VerifyCsrfToken extends Middleware
         'guardar/',
         'programas/',
         'profesores/',
-        'estudiantes/' ,
+        'estudiantes/*' ,
         'usuario/',
         "cursos/",
         "documentos/*",
-        "noticias/"
+        "noticias/",
+        "cursouser/"
        ];
 }

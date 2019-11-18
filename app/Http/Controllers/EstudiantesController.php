@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\documentos;
 use App\personas;
+use App\Usuarios;
+
 
 class EstudiantesController extends Controller
 {
@@ -34,6 +36,7 @@ class EstudiantesController extends Controller
     public function store(Request $request)
     {
         $estudiante = new personas;
+        $usuario = Usuarios::where("correo",$request->emailAddress)->first();
         $estudiante->tipo_doc=  $request->tipoDocumento;
         $estudiante->numero_doc= $request->numeroDocumento;
         $estudiante->lugarExpedicion_doc = $request->lugarExpedicionDocumento;
@@ -60,9 +63,16 @@ class EstudiantesController extends Controller
         $estudiante->tipo_vinsulacion = $request->tipoVinculacion;
         $estudiante->programa = $request->programa;
         $estudiante->documentos = $request->documentos;
-        $estudiante->foto = $request->foto;
-        $estudiante->Usuarios_id_usuario = 2;
+        // $encodedData = strtr($request->foto, '-_', '+/');
+        // $encodedData = explode(',', $request->foto);
+        // $estudiante->foto = base64_decode(utf8_encode($encodedData[1]));
+        //$estudiante->foto = base64_decode($request->foto);
+        // $base64_str = substr($arc->document3, strpos($arc->document3, ",")+1);
+    
+        // $decoded = base64_decode($encodedData);
+        $estudiante->Usuarios_id_usuario = $usuario->id_usuario;
         $estudiante->save();
+        return "";
 //direccionResidencia: null
 //parentezco: null
 
@@ -186,6 +196,14 @@ class EstudiantesController extends Controller
         $documento->documento = base64_encode($documento->documento);
         return $documento;
     }
+/*
+    * @param  \Illuminate\Http\Request  $request
+    * @return \Illuminate\Http\Response
+    */
+   public function getEstudentById(Request $request)
+   {
+        return  personas::where("numero_doc",$request->doc)->first();
+   }
     
 
 

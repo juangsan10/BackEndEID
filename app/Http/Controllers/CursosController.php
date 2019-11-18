@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\cursos;
 use App\personas_has_cursos;
+use App\Usuarios;
+use Illuminate\Support\Facades\DB;
 
 class CursosController extends Controller
 {
@@ -15,7 +17,14 @@ class CursosController extends Controller
      */
     public function index()
     {
-        return cursos::all();
+        // $token = strval($request->bearerToken());         
+        // if($request->bearerToken()) 
+        //  {
+        //     $user = Usuarios::where("id_token",$token);
+        //      return $user;
+        //  }
+        // //  $documento  = documentos::where("Personas_numero_doc",$id)->first();
+         cursos::all();
     }
 
     /**
@@ -72,5 +81,30 @@ class CursosController extends Controller
     public function destroy($id)
     {
         //
+    }
+    /**
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getCursosByUser(Request $request)
+    {
+
+        $usuario =  Usuarios::where('correo', $request->email)->first();
+        if($usuario)
+        {
+            $estudiantesAndCurso = DB::table('programas')
+            ->join('cursos', 'cursos.Programas_id_programa', '=', 'programas.id_programa')
+            ->join('personas_has_cursos', 'personas_has_cursos.Cursos_id_curso', '=', 'cursos.id_curso')
+            ->join('personas', 'personas.numero_doc', '=', 'personas_has_cursos.Personas_numero_doc')
+            ->select('programas.nombre','personas.numero_doc','personas.nombre_completo','personas.fecha_nacimiento')
+            ->where('personas.Usuarios_id_usuario',$usuario->id_usuario)
+            ->get();
+            return $estudiantesAndCurso;
+        }else
+        {
+            return response()
+                ->json(['status' => '403', 'data' => "Error"]);
+        }
     }
 }
