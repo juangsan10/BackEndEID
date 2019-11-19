@@ -34,6 +34,8 @@ Route::post('/cursouser', 'CursosController@getCursosByUser' );
 Route::apiResource('/noticias', 'NoticiasController' );
 Route::apiResource('/estudiantes', 'EstudiantesController' );
 Route::post('/estudiantes/estudentbyid', 'EstudiantesController@getEstudentById' );
+Route::post('/estudiantes/storeguardian', 'EstudiantesController@storeGuardianAsStudent' );
+
 
 
 Route::post('/documentos/{id}', 'EstudiantesController@storeDocuments' );

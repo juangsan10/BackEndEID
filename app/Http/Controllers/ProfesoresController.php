@@ -36,8 +36,6 @@ class ProfesoresController extends Controller
     public function store(Request $request)
     {
         $profesor = new personas;
-
-
         $usuario = new Usuarios;
         $usuario->correo = $request->correo;
         $usuario->nombre = $request->nombreCompleto;

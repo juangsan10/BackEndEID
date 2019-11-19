@@ -107,4 +107,24 @@ class CursosController extends Controller
                 ->json(['status' => '403', 'data' => "Error"]);
         }
     }
+
+    public function getCursosByProfessor(Request $request)
+    {
+        $usuario =  Usuarios::where('correo', $request->email)->first();
+        if($usuario)
+        {
+            $estudiantesAndCurso = DB::table('programas')
+            ->join('cursos', 'cursos.Programas_id_programa', '=', 'programas.id_programa')
+            ->join('personas_has_cursos', 'personas_has_cursos.Cursos_id_curso', '=', 'cursos.id_curso')
+            ->join('personas', 'personas.numero_doc', '=', 'personas_has_cursos.Personas_numero_doc')
+            ->select('programas.nombre','personas.numero_doc','personas.nombre_completo','personas.fecha_nacimiento')
+            ->where('personas.Usuarios_id_usuario',$usuario->id_usuario)
+            ->get();
+            return $estudiantesAndCurso;
+        }else
+        {
+            return response()
+                ->json(['status' => '403', 'data' => "Error"]);
+        }
+    }
 }

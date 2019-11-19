@@ -58,11 +58,15 @@ class EstudiantesController extends Controller
         $estudiante->telefono_madre = $request->celularMadre;
         $estudiante->nombre_acudiente = $request->nombreAcudiente;
         $estudiante->celular_acudiente = $request->celular;
+        $estudiante->direccion_residencia = $request->direccionResidencia;
+        $estudiante->parentezco = $request->parentezco;
+
         //emailAddress correo acudiente
         $estudiante->empresa = $request->empresa;
         $estudiante->tipo_vinsulacion = $request->tipoVinculacion;
         $estudiante->programa = $request->programa;
         $estudiante->documentos = $request->documentos;
+        $estudiante->foto = $request->foto;
         // $encodedData = strtr($request->foto, '-_', '+/');
         // $encodedData = explode(',', $request->foto);
         // $estudiante->foto = base64_decode(utf8_encode($encodedData[1]));
@@ -72,10 +76,9 @@ class EstudiantesController extends Controller
         // $decoded = base64_decode($encodedData);
         $estudiante->Usuarios_id_usuario = $usuario->id_usuario;
         $estudiante->save();
-        return "";
-//direccionResidencia: null
-//parentezco: null
 
+
+//
 /*      $estudiante = new personas;
         $estudiante->tipo_doc=  $request->tipoDocumento;
         $estudiante->numero_doc= $request->numeroDocumento;
@@ -203,6 +206,50 @@ class EstudiantesController extends Controller
    public function getEstudentById(Request $request)
    {
         return  personas::where("numero_doc",$request->doc)->first();
+   }
+   public function storeGuardianAsStudent(Request $request)
+   {
+    $estudiante = new personas;
+    $usuario = Usuarios::where("correo",$request->correo)->first();
+    $estudiante->tipo_doc=  $request->tipoDocumento;
+    $estudiante->numero_doc= $request->numeroDocumento;
+    $estudiante->lugarExpedicion_doc = $request->lugarExpedicionDocumento;
+    $estudiante->nombre_completo = $request->nombreCompleto;
+    $estudiante->apellidos =$request->apellidos;
+    $estudiante->fecha_nacimiento = $request->fechaNacimiento;
+    $estudiante->lugar_nacimiento = $request->lugarNacimiento;
+    $estudiante->genero = $request->genero;
+    $estudiante->telefono = $request->telefono;
+    $estudiante->correo = $request->correo;
+    $estudiante->estudia =$request->estudia;
+    $estudiante->grado_escolar = $request->gradoEscolar;
+    $estudiante->nombre_establecimiento = $request->nombreEstablecimiento;
+    $estudiante->tipo_establecimiento =$request->tipoEstablecimiento;
+    $estudiante->eps =$request->eps;
+    $estudiante->nombre_padre=$request->nombrePadre;
+    $estudiante->telefono_padre =$request->celularPadre;
+    $estudiante->nombre_madre =$request->nombreMadre;
+    $estudiante->telefono_madre = $request->celularMadre;
+    $estudiante->nombre_acudiente = $request->nombreAcudiente;
+    $estudiante->celular_acudiente = $request->celular;
+    //emailAddress correo acudiente
+    $estudiante->empresa = $request->empresa;
+    $estudiante->tipo_vinsulacion = $request->tipoVinculacion;
+    $estudiante->programa = $request->programa;
+    $estudiante->documentos = $request->documentos;
+    $estudiante->direccion_residencia = $request->direccionResidencia;
+    $estudiante->parentezco = $request->parentezco;
+    // $encodedData = strtr($request->foto, '-_', '+/');
+    // $encodedData = explode(',', $request->foto);
+    // $estudiante->foto = base64_decode(utf8_encode($encodedData[1]));
+    $estudiante->foto = $request->foto;
+    // $base64_str = substr($arc->document3, strpos($arc->document3, ",")+1);
+
+    // $decoded = base64_decode($encodedData);
+    $estudiante->Usuarios_id_usuario = $usuario->id_usuario;
+    $estudiante->save();
+    return response()
+        ->json(['status' => '200', 'response' => 'Guardado']);
    }
     
 
