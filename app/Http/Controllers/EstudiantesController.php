@@ -251,7 +251,31 @@ class EstudiantesController extends Controller
     return response()
         ->json(['status' => '200', 'response' => 'Guardado']);
    }
+
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+   public function getEstudentByCurso($id)
+   {
+
+    return DB::table('cursos')
+    ->join('personas_has_cursos', 'personas_has_cursos.Cursos_id_curso', '=', 'cursos.id_curso')
+    ->join('personas', 'personas.numero_doc', '=', 'personas_has_cursos.Personas_numero_doc')
+    ->join('usuarios', 'usuarios.id_usuario', '=', 'personas.Usuarios_id_usuario')
+    ->select('personas.numero_doc','personas.nombre_completo')
+    ->where('cursos.id_curso', '=', $id)
+    ->where(function ($query) {
+        $query->where('usuarios.Roles_id_rol', '!=', 2)
+              ->orWhere('personas.hv_propia', '!=', 1);
+    })
+    ->get();
+   }
     
 
 
 }
+

@@ -113,14 +113,23 @@ class CursosController extends Controller
         $usuario =  Usuarios::where('correo', $request->email)->first();
         if($usuario)
         {
-            $estudiantesAndCurso = DB::table('programas')
-            ->join('cursos', 'cursos.Programas_id_programa', '=', 'programas.id_programa')
-            ->join('personas_has_cursos', 'personas_has_cursos.Cursos_id_curso', '=', 'cursos.id_curso')
-            ->join('personas', 'personas.numero_doc', '=', 'personas_has_cursos.Personas_numero_doc')
-            ->select('programas.nombre','personas.numero_doc','personas.nombre_completo','personas.fecha_nacimiento')
-            ->where('personas.Usuarios_id_usuario',$usuario->id_usuario)
-            ->get();
-            return $estudiantesAndCurso;
+            if($usuario->Roles_id_rol==2)
+            {
+                $estudiantesAndCurso = DB::table('programas')
+                ->join('cursos', 'cursos.Programas_id_programa', '=', 'programas.id_programa')
+                ->join('personas_has_cursos', 'personas_has_cursos.Cursos_id_curso', '=', 'cursos.id_curso')
+                ->join('personas', 'personas.numero_doc', '=', 'personas_has_cursos.Personas_numero_doc')
+                ->select('programas.nombre','cursos.id_curso')
+                ->where('personas.Usuarios_id_usuario',$usuario->id_usuario)
+                ->where("personas.hv_propia",1)
+                ->get();
+                return response()
+                ->json(['status' => '200', 'data' => $estudiantesAndCurso]);
+            }else
+            {
+                return response()
+                ->json(['status' => '502', 'data' => "No es un profesor"]);
+            }
         }else
         {
             return response()

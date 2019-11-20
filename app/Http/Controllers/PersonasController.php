@@ -66,6 +66,7 @@ class PersonasController extends Controller
         $personas->antecedentes_salud = $request->antecedentes_salud;
         $personas->actividad_deportiva = $request->actividad_deportiva;
         $personas->empresa_usuario = $request->empresa_usuario;
+        $personas->hv_propia = 1;
         $personas->foto = $request->foto;
         $personas->save();
     }

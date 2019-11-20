@@ -31,12 +31,14 @@ Route::apiResource('/profesores', 'ProfesoresController' );
 Route::apiResource('/usuario', 'UsuariosController' );
 Route::apiResource('/cursos', 'CursosController' );
 Route::post('/cursouser', 'CursosController@getCursosByUser' );
+Route::post('/cursoprofesor', 'CursosController@getCursosByProfessor');
+
+
 Route::apiResource('/noticias', 'NoticiasController' );
 Route::apiResource('/estudiantes', 'EstudiantesController' );
 Route::post('/estudiantes/estudentbyid', 'EstudiantesController@getEstudentById' );
 Route::post('/estudiantes/storeguardian', 'EstudiantesController@storeGuardianAsStudent' );
-
-
+Route::get('/estudiantes/estudentbycurso/{id}', 'EstudiantesController@getEstudentByCurso' );
 
 Route::post('/documentos/{id}', 'EstudiantesController@storeDocuments' );
 Route::get('/documentos/{id}', 'EstudiantesController@getDocuments' );
