@@ -39,6 +39,8 @@ Route::apiResource('/estudiantes', 'EstudiantesController' );
 Route::post('/estudiantes/estudentbyid', 'EstudiantesController@getEstudentById' );
 Route::post('/estudiantes/storeguardian', 'EstudiantesController@storeGuardianAsStudent' );
 Route::get('/estudiantes/estudentbycurso/{id}', 'EstudiantesController@getEstudentByCurso' );
+Route::post('/estudiantes/asistenciabystudent/', 'EstudiantesController@asistenciaByStudent');
+
 
 Route::post('/documentos/{id}', 'EstudiantesController@storeDocuments' );
 Route::get('/documentos/{id}', 'EstudiantesController@getDocuments' );

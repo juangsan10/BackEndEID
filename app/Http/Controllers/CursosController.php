@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\cursos;
 use App\personas_has_cursos;
+use App\plan_trabajo;
 use App\Usuarios;
 use Illuminate\Support\Facades\DB;
 
@@ -136,4 +137,24 @@ class CursosController extends Controller
                 ->json(['status' => '403', 'data' => "Error"]);
         }
     }
+
+    public function getPlanProgramas()
+    {
+        return plan_trabajo::all();
+    }
+
+    // public function setPlanProgramas()
+    // {
+
+    //     $plan_trabajo
+    //     fecha
+    //     objetivo_general
+    //     componentes
+    //     actividades
+    //     tiempo_duracion
+    //     clase
+    //     Cursos_id_curso
+    //     return plan_trabajo::all();
+    // }
+
 }

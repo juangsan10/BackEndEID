@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\documentos;
 use App\personas;
 use App\Usuarios;
+use App\asistencias;
 
 
 class EstudiantesController extends Controller
@@ -275,7 +276,24 @@ class EstudiantesController extends Controller
     ->get();
    }
     
-
+   public function asistenciaByStudent(Request $request)
+   {
+    
+    $asistencia = new asistencias;
+    $fecha = date('Y-m-d H:i:s');
+    // return $request->estudiantes[0]["numero_doc"];
+    foreach ($request->estudiantes as $estudiante) {
+        $asistencia = new asistencias;
+        $asistencia->fecha = $fecha;
+        $asistencia->asistio = 1;
+        $asistencia->Personas_has_Cursos_Personas_numero_doc = $estudiante["numero_doc"]; 
+        $asistencia->Personas_has_Cursos_Cursos_id_curso = $request->idCurso;
+        $asistencia->save();
+    }
+    return response()
+    ->json(['status' => '200', 'response' => 'Asistencia guardada correctamente']);
+    }
 
 }
+
 
