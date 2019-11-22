@@ -41,6 +41,8 @@ class CursosController extends Controller
         $cursos->cupos = $request->cupos;
         $cursos->nombre = $request->nombre;
         $cursos->Programas_id_programa = $request->programa;
+        $cursos->id_detalle = $request->idDetalle;
+        $cursos->estado = 1;
         $cursos->save();
         $matricula = new personas_has_cursos;
         $matricula->Cursos_id_curso = $cursos->id_curso;
@@ -156,5 +158,21 @@ class CursosController extends Controller
     //     Cursos_id_curso
     //     return plan_trabajo::all();
     // }
+
+    public function getCursosDisponibles(Request $request)
+    {
+        $cursos_disponibles = DB::table('programas')
+                ->join('cursos', 'cursos.Programas_id_programa', '=', 'programas.id_programa')
+                ->join('detalle', 'detalle.id_detalle', '=', 'cursos.id_detalle')
+                ->select('programas.nombre','cursos.id_curso')
+                ->where('cursos.estado',1)
+                ->where("programas.estado",1)
+                ->where("cursos.cupos",'>',1)
+                ->select('programas.nombre', 'detalle.edad_min', 'detalle.edad_max' , 'detalle.hora_min' , 'detalle.hora_max' , 'detalle.id_detalle','detalle.nombre as nombre_detalle')
+                ->get();
+                return response()
+                ->json(['status' => '200', 'data' => $cursos_disponibles]);
+        
+    }
 
 }

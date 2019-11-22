@@ -26,12 +26,21 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::get('/prueba', 'PersonasController@prueba' );
 Route::resource('/guardar', 'PersonasController' );
+Route::get('/programas/getdetalle/{id}', 'ProgramasController@getDetalleByPrograma');
+
 Route::resource('/programas', 'ProgramasController' );
+
+
 Route::apiResource('/profesores', 'ProfesoresController' );
 Route::apiResource('/usuario', 'UsuariosController' );
 Route::apiResource('/cursos', 'CursosController' );
+
+Route::get('/cursos/cursosdisponibles', 'CursosController@getCursosDisponibles' );
+
 Route::post('/cursouser', 'CursosController@getCursosByUser' );
 Route::post('/cursoprofesor', 'CursosController@getCursosByProfessor');
+
+
 
 
 Route::apiResource('/noticias', 'NoticiasController' );

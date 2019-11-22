@@ -19,13 +19,13 @@ class EstudiantesController extends Controller
      */
     public function index()
     {
-        $estudiantes = DB::table('personas')
+        $estudiantesAndCurso = DB::table('cursos')
+        ->join('personas_has_cursos', 'personas_has_cursos.Cursos_id_curso', '=', 'cursos.id_curso')
+        ->join('personas', 'personas.numero_doc', '=', 'personas_has_cursos.Personas_numero_doc')
         ->join('usuarios', 'personas.Usuarios_id_usuario', '=', 'usuarios.id_usuario')
-        ->join('roles', 'usuario.Roles_id_rol', '=', 'roles.id_rol')
         ->select('personas.*')
-        ->where('roles.rol','Estudiante')
         ->get();
-        return $estudiantes;
+        return $estudiantesAndCurso;
     }
 
     /**

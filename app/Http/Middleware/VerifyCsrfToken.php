@@ -21,11 +21,13 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         'guardar/',
         'programas/',
+        'programas/*',
         'profesores/',
         'estudiantes/*' ,
         'estudiantes/' ,
         'usuario/',
         "cursos/",
+        "cursos/*",
         "documentos/*",
         "noticias/",
         "cursouser/",

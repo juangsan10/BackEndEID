@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\programas;
+use Illuminate\Support\Facades\DB;
 
 class ProgramasController extends Controller
 {
@@ -14,6 +15,8 @@ class ProgramasController extends Controller
      */
     public function index(Request $request)
     {
+
+        //programas que tengan un cruso asociado, tengan cupos, estan activos 
          return programas::all();
     }
 
@@ -94,4 +97,15 @@ class ProgramasController extends Controller
     {
         //
     }
+
+    public function getDetalleByPrograma($id)
+    {
+        return DB::table('programas')
+        ->join('detalle', 'detalle.Programas_id_programa', '=', 'programas.id_programa')
+        ->select('programas.nombre', 'detalle.edad_min', 'detalle.edad_max' , 'detalle.hora_min' , 'detalle.hora_max' , 'detalle.id_detalle','detalle.nombre as nombre_detalle')
+        ->where('programas.id_programa', '=', $id)
+        ->get();
+    }
+    
+    
 }
