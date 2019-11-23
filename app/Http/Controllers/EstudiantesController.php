@@ -62,7 +62,7 @@ class EstudiantesController extends Controller
         $estudiante->celular_acudiente = $request->celular;
         $estudiante->direccion_residencia = $request->direccionResidencia;
         $estudiante->parentezco = $request->parentezco;
-
+        $estudiante->hv_propia = 0;
         //emailAddress correo acudiente
         $estudiante->empresa = $request->empresa;
         $estudiante->tipo_vinsulacion = $request->tipoVinculacion;
@@ -238,6 +238,7 @@ class EstudiantesController extends Controller
     $estudiante->telefono_madre = $request->celularMadre;
     $estudiante->nombre_acudiente = $request->nombreAcudiente;
     $estudiante->celular_acudiente = $request->celular;
+    $estudiante->hv_propia = 1;
     //emailAddress correo acudiente
     $estudiante->empresa = $request->empresa;
     $estudiante->tipo_vinsulacion = $request->tipoVinculacion;

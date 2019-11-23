@@ -48,7 +48,8 @@ class ProfesoresController extends Controller
         $profesor->telefono_madre = $request->celularMadre;
         $profesor->telefono_padre = $request->celularPadre;
         $profesor->correo = $request->correo;
-        // $profesor = $request->direccionResidencia;
+        $profesor->direccion_residencia = $request->direccionResidencia;
+        $profesor->hv_propia = 1;
         $profesor->empresa = $request->empresa;
         $profesor->eps = $request->eps;
         $profesor->fecha_nacimiento = $request->fechaNacimiento;
