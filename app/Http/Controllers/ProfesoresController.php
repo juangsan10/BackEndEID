@@ -64,6 +64,8 @@ class ProfesoresController extends Controller
         $profesor->tipo_doc = $request->tipoDocumento;
         $profesor->tipo_vinsulacion = $request->tipoVinculacion;
         $profesor->save();
+        return response()
+         ->json(['status' => '200', 'data' => "guardado"]);
     }
 
     /**

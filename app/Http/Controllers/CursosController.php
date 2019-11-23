@@ -25,7 +25,12 @@ class CursosController extends Controller
         //      return $user;
         //  }
         // //  $documento  = documentos::where("Personas_numero_doc",$id)->first();
-         cursos::all();
+         $cursos_disponibles = DB::table('cursos')
+         ->where('cursos.estado',1)         
+         ->select('cursos.*')
+         ->get();
+         return response()
+         ->json(['status' => '200', 'data' => $cursos_disponibles]);
     }
 
     /**

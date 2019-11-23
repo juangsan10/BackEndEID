@@ -32,8 +32,11 @@ class NoticiasController extends Controller
         $noticias->subtitulo = $request->subtitulo;
         $noticias->tema = $request->tema;
         $noticias->titutlo = $request->titulo;
+        $noticias->foto = $request->foto;
         $noticias->Usuarios_id_usuario = $usuario->id_usuario;
         $noticias->save();
+        return response()
+         ->json(['status' => '200', 'data' => "guardado"]);
     }
 
     /**
