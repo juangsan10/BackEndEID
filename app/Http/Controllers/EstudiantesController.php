@@ -8,6 +8,7 @@ use App\documentos;
 use App\personas;
 use App\Usuarios;
 use App\asistencias;
+use App\personas_has_cursos;
 
 
 class EstudiantesController extends Controller
@@ -77,6 +78,10 @@ class EstudiantesController extends Controller
         // $decoded = base64_decode($encodedData);
         $estudiante->Usuarios_id_usuario = $usuario->id_usuario;
         $estudiante->save();
+        $matricula = new personas_has_cursos;
+        $matricula->Cursos_id_curso = $request->programa;
+        $matricula->Personas_numero_doc = $request->numeroDocumento;
+        $matricula->save();
 
 
 //
@@ -237,6 +242,9 @@ class EstudiantesController extends Controller
     $estudiante->empresa = $request->empresa;
     $estudiante->tipo_vinsulacion = $request->tipoVinculacion;
     $estudiante->programa = $request->programa;
+
+  
+
     $estudiante->documentos = $request->documentos;
     $estudiante->direccion_residencia = $request->direccionResidencia;
     $estudiante->parentezco = $request->parentezco;
@@ -249,6 +257,12 @@ class EstudiantesController extends Controller
     // $decoded = base64_decode($encodedData);
     $estudiante->Usuarios_id_usuario = $usuario->id_usuario;
     $estudiante->save();
+
+    $matricula = new personas_has_cursos;
+    $matricula->Cursos_id_curso = $request->programa;
+    $matricula->Personas_numero_doc = $request->numeroDocumento;
+    $matricula->save();
+
     return response()
         ->json(['status' => '200', 'response' => 'Guardado']);
    }

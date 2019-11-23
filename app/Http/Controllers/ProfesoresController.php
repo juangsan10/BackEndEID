@@ -19,9 +19,9 @@ class ProfesoresController extends Controller
     {
         $profesores = DB::table('personas')
         ->join('usuarios', 'personas.Usuarios_id_usuario', '=', 'usuarios.id_usuario')
-        ->join('roles', 'usuarios.Roles_id_rol', '=', 'roles.id_rol')
         ->select('personas.*')
-        ->where('roles.rol','Profesor')
+        ->where('usuarios.Roles_id_rol','2')
+        ->where('personas.hv_propia',1)
         ->get();
 
         return $profesores;

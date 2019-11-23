@@ -35,7 +35,7 @@ Route::apiResource('/profesores', 'ProfesoresController' );
 Route::apiResource('/usuario', 'UsuariosController' );
 Route::apiResource('/cursos', 'CursosController' );
 
-Route::get('/cursos/cursosdisponibles', 'CursosController@getCursosDisponibles' );
+Route::get('/cursosdisponibles', 'CursosController@getCursosDisponibles' );
 
 Route::post('/cursouser', 'CursosController@getCursosByUser' );
 Route::post('/cursoprofesor', 'CursosController@getCursosByProfessor');
