@@ -26,6 +26,7 @@ class VerifyCsrfToken extends Middleware
         'estudiantes/*' ,
         'estudiantes/' ,
         'usuario/',
+        'usuario/*',
         "cursos/",
         "cursos/*",
         "documentos/*",
@@ -34,3 +35,4 @@ class VerifyCsrfToken extends Middleware
         "cursoprofesor/"
        ];
 }
+

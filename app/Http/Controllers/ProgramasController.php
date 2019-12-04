@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\programas;
+use App\objetivos_programa;
 use Illuminate\Support\Facades\DB;
 
 class ProgramasController extends Controller
@@ -105,6 +106,11 @@ class ProgramasController extends Controller
         ->select('programas.nombre', 'detalle.edad_min', 'detalle.edad_max' , 'detalle.hora_min' , 'detalle.hora_max' , 'detalle.id_detalle','detalle.nombre as nombre_detalle')
         ->where('programas.id_programa', '=', $id)
         ->get();
+    }
+
+    public function getObjetivosByPrograma($id)
+    {
+        return objetivos_programa::where("Programas_id_programa",$id)->first();
     }
     
     

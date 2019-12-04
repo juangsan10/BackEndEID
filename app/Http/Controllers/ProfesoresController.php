@@ -7,6 +7,7 @@ use App\personas;
 use App\Usuarios;
 use App\roles;
 use Illuminate\Support\Facades\DB;
+use Mail;
 
 class ProfesoresController extends Controller
 {
@@ -64,6 +65,14 @@ class ProfesoresController extends Controller
         $profesor->tipo_doc = $request->tipoDocumento;
         $profesor->tipo_vinsulacion = $request->tipoVinculacion;
         $profesor->save();
+        $bodyMail="Se ha creado una cuenta de usuario en la plataforma Escuela de Iniciacion Deportiva 
+             Para ingresar es http://localhost:4300/#/login
+             Debe ingresar por la opcion, ingreso con cuenta de gmail e ingresar con su correo: ".$request->correo."";
+        Mail::raw($bodyMail, function ($message) use ($request){
+            $message->subject('Cuenta de Iniciacion Deportiva');
+            $message->to($request->correo);
+        });
+        
         return response()
          ->json(['status' => '200', 'data' => "guardado"]);
     }

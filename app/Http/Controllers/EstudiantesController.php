@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\documentos;
@@ -9,6 +9,8 @@ use App\personas;
 use App\Usuarios;
 use App\asistencias;
 use App\personas_has_cursos;
+use App\Evaluaciones;
+use App\Evaluaciones_has_objetivos;
 
 
 class EstudiantesController extends Controller
@@ -201,6 +203,8 @@ class EstudiantesController extends Controller
      */
     public function getDocuments($id)
     {   
+        // Mail::send('emails.template', ['user' => 'prueba'], function ($message){
+   
         $documento  = documentos::where("Personas_numero_doc",$id)->first();
         $documento->documento = base64_encode($documento->documento);
         return $documento;
@@ -300,7 +304,7 @@ class EstudiantesController extends Controller
     foreach ($request->estudiantes as $estudiante) {
         $asistencia = new asistencias;
         $asistencia->fecha = $fecha;
-        $asistencia->asistio = 1;
+        $asistencia->asistio = $estudiante["asistio"]; 
         $asistencia->Personas_has_Cursos_Personas_numero_doc = $estudiante["numero_doc"]; 
         $asistencia->Personas_has_Cursos_Cursos_id_curso = $request->idCurso;
         $asistencia->save();
@@ -309,6 +313,80 @@ class EstudiantesController extends Controller
     ->json(['status' => '200', 'response' => 'Asistencia guardada correctamente']);
     }
 
+    public function setCalificacionByStudent(Request $request)
+    {
+
+        $evaluacion = new Evaluaciones;
+        $id_profesor = DB::table('usuarios')
+        ->join('personas', 'personas.Usuarios_id_usuario', '=', 'usuarios.id_usuario')
+        ->select('personas.numero_doc')
+        ->where('personas.hv_propia', '=',1)
+        ->where('usuarios.Roles_id_rol', '=',2)
+        ->where('usuarios.correo', '=', $request->idProfesor)->first();
+        $evaluacion->id_profesor = $id_profesor->numero_doc;
+        $evaluacion->fecha = $request->fecha['year'].'-'.$request->fecha['month'].'-'.$request->fecha['day'];
+        $evaluacion->observacion =  $request->observacion;
+        $evaluacion->Personas_has_Cursos_Personas_numero_doc = $request->idEstudiante;
+        $evaluacion->Personas_has_Cursos_Cursos_id_curso = $request->idCurso; 
+        $evaluacion->idtimestamp = date("YmdHis"); 
+        $evaluacion->save();
+        $notasString="";
+        foreach ($request->notas as $nota) {
+            $evaluacion_objetivo = new Evaluaciones_has_objetivos;
+            $evaluacion_objetivo->Evaluaciones_id_evaluacion = $evaluacion->id;
+            $evaluacion_objetivo->nota = $nota['nota'];
+            $evaluacion_objetivo->objetivos_id_objetivo = $nota['objetivo'];
+            $evaluacion_objetivo->save();
+        }
+        
+        $usuario = Personas::where("numero_doc",$evaluacion->Personas_has_Cursos_Personas_numero_doc)->first();
+        $email ="";
+        if($usuario->hv_propia == 1)
+        {
+            $email = $usuario->correo;
+        }else
+        {
+            $email =  $usuario->emailAddress;
+        }
+        $bodyMail="
+            Se ha hecho la siguiente observacion sobre el estudiante con documento ".$evaluacion->numero_doc."
+            \n".$evaluacion->observacion;
+        Mail::raw($bodyMail, function ($message) use ($request){
+                $message->subject('Cuenta de Iniciacion Deportiva');
+                $message->to($email);
+            });
+        
+     return response()
+     ->json(['status' => '200', 'response' => 'Asistencia guardada correctamente']);
+     }
+
+    public function getCalificacionByStudent(Request $request)
+    {
+        $calificaciones = DB::table('evaluaciones')
+        ->join('evaluaciones_has_objetivos', 'evaluaciones_has_objetivos.Evaluaciones_id_evaluacion', '=', 'evaluaciones.id_evaluacion')
+        ->join('objetivos', 'objetivos.id_objetivo', '=', 'evaluaciones_has_objetivos.objetivos_id_objetivo')
+        ->join('cursos', 'cursos.id_curso', '=', 'evaluaciones.Personas_has_Cursos_Cursos_id_curso')
+        ->select('evaluaciones.observacion','objetivos.nombre','evaluaciones_has_objetivos.nota')
+        ->where('cursos.estado', '=',1)
+        ->where('evaluaciones.Personas_has_Cursos_Personas_numero_doc', '=', $request->doc)
+        ->where('evaluaciones.Personas_has_Cursos_Cursos_id_curso', '=', $request->idCurso)->get();
+
+     return response()
+     ->json(['status' => '200', 'data' => $calificaciones]);
+     }
+
+     public function getAsistencia(Request $request)
+     {
+        $asistencia = DB::table('asistencias')
+            ->join('personas', 'personas.numero_doc', '=', 'asistencias.Personas_has_Cursos_Personas_numero_doc')
+            ->select('asistencias.*','personas.nombre_completo')
+            ->where('asistencias.Personas_has_Cursos_Cursos_id_curso', '=', $request->idCurso)->get();
+        foreach ($asistencia as $asistenci) {
+            $asistenci->fecha = explode(" ",$asistenci->fecha)[0];
+            $asistenci->asistio = $asistenci->asistio == 1 ? "SI" : "NO";
+        }
+            return response()
+            ->json(['status' => '200', 'data' => $asistencia]);
+        }
+     
 }
-
-

@@ -7,6 +7,7 @@ use App\cursos;
 use App\personas_has_cursos;
 use App\plan_trabajo;
 use App\Usuarios;
+use App\objetivos;
 use Illuminate\Support\Facades\DB;
 
 class CursosController extends Controller
@@ -105,7 +106,7 @@ class CursosController extends Controller
             ->join('cursos', 'cursos.Programas_id_programa', '=', 'programas.id_programa')
             ->join('personas_has_cursos', 'personas_has_cursos.Cursos_id_curso', '=', 'cursos.id_curso')
             ->join('personas', 'personas.numero_doc', '=', 'personas_has_cursos.Personas_numero_doc')
-            ->select('programas.nombre','personas.numero_doc','personas.nombre_completo','personas.fecha_nacimiento')
+            ->select('programas.nombre','personas.numero_doc','personas.nombre_completo','personas.fecha_nacimiento','cursos.id_curso')
             ->where('personas.Usuarios_id_usuario',$usuario->id_usuario)
             ->get();
             return $estudiantesAndCurso;
@@ -177,9 +178,65 @@ class CursosController extends Controller
                 ->get();
                 return response()
                 ->json(['status' => '200', 'data' => $cursos_disponibles]);
-
-                
-        
     }
 
+    public function setObjetivos(Request $request)
+    {
+        $objetivos =  objetivos::where('Cursos_id_curso', $request->idCurso)->first();
+        if($objetivos)
+        {
+            return response()
+                ->json(['status' => '403', 'data' => "Ya existe objetivos para este curso"]);
+        }else
+        {
+            foreach ($request->objetivos as $obje) {
+                $objetivos = new objetivos;
+                $objetivos->Cursos_id_curso = $request->idCurso;
+                $objetivos->nombre = $obje["objetivo"];
+                $objetivos->save();
+            }
+            return response()
+                ->json(['status' => '200', 'data' => "Se han creado los objetvios correctamente"]);
+        }
+
+    }
+    public function getObjetivosByCurso($id)
+    {
+        return $objetivos =  objetivos::where('Cursos_id_curso', $id)->get();
+
+    }
+
+    public function setPlanTrabajo(Request $request)
+    {
+        $plan_trabajo = new plan_trabajo;
+        // $plan_trabajo->fecha = $request->fecha['year'].'-'.$request->fecha['month'].'-'.$request->fecha['day'];
+        $plan_trabajo->objetivo_general = $request->objetivoGeneral;
+        $plan_trabajo->componentes = $request->componentes;
+        $plan_trabajo->actividades = $request->actividades;
+        $plan_trabajo->tiempo_duracion = $request->tiempoDuracion;
+        $plan_trabajo->clase = $request->clase;
+        $plan_trabajo->Cursos_id_curso = $request->curso;
+        $plan_trabajo->save();
+        return response()
+        ->json(['status' => '200', 'data' => "Se han creado el entrenamiento correctamente"]);
+    }
+
+    public function  getPlanTrabajo(Request $request)
+    {
+        $usuario =  Usuarios::where('correo', $request->email)->first();
+        if($usuario)
+        {
+        $planDetrabajo = DB::table('cursos')
+            ->join('programas', 'programas.id_programa', '=', 'cursos.Programas_id_programa')
+            ->join('personas_has_cursos', 'personas_has_cursos.Cursos_id_curso', '=', 'cursos.id_curso')
+            ->join('personas', 'personas.numero_doc', '=', 'personas_has_cursos.Personas_numero_doc')
+            ->join('plan_trabajo', 'plan_trabajo.Cursos_id_curso', '=', 'cursos.id_curso')
+            ->select('plan_trabajo.clase','cursos.id_curso',"programas.nombre","plan_trabajo.fecha")
+            ->where('personas.Usuarios_id_usuario',$usuario->id_usuario)
+            ->where("personas.hv_propia",1)
+            ->get();
+            return response()
+            ->json(['status' => '200', 'data' => $planDetrabajo]);   
+        }
+    }
 }

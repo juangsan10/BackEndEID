@@ -4,7 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Evaluaciones extends Model
+class objetivos_programa extends Model
 {
     public $timestamps = false;
+    protected $table = 'objetivos_programa';
 }

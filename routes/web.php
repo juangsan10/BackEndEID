@@ -27,20 +27,29 @@ Route::group(['prefix' => 'auth'], function () {
 Route::get('/prueba', 'PersonasController@prueba' );
 Route::resource('/guardar', 'PersonasController' );
 Route::get('/programas/getdetalle/{id}', 'ProgramasController@getDetalleByPrograma');
+Route::get('/programas/getdetalleprograma/{id}', 'ProgramasController@getObjetivosByPrograma');
+
+
 
 Route::resource('/programas', 'ProgramasController' );
 
 
 Route::apiResource('/profesores', 'ProfesoresController' );
 Route::apiResource('/usuario', 'UsuariosController' );
+Route::post('/usuario/login', 'UsuariosController@login' );
+Route::post('/usuario/register', 'UsuariosController@register' );
+Route::get('/usuario/validateurl/{id}', 'UsuariosController@validateUrl' );
+
 Route::apiResource('/cursos', 'CursosController' );
 
 Route::get('/cursosdisponibles', 'CursosController@getCursosDisponibles' );
 
 Route::post('/cursouser', 'CursosController@getCursosByUser' );
 Route::post('/cursoprofesor', 'CursosController@getCursosByProfessor');
-
-
+Route::post('cursos/saveobjetivos', 'CursosController@setObjetivos');
+Route::get('cursos/getobjetivos/{id}', 'CursosController@getObjetivosByCurso');
+Route::post('cursos/setplantrabajo', 'CursosController@setPlanTrabajo');
+Route::post('cursos/getplantrabajo', 'CursosController@getPlanTrabajo');
 
 
 Route::apiResource('/noticias', 'NoticiasController' );
@@ -49,10 +58,15 @@ Route::post('/estudiantes/estudentbyid', 'EstudiantesController@getEstudentById'
 Route::post('/estudiantes/storeguardian', 'EstudiantesController@storeGuardianAsStudent' );
 Route::get('/estudiantes/estudentbycurso/{id}', 'EstudiantesController@getEstudentByCurso' );
 Route::post('/estudiantes/asistenciabystudent/', 'EstudiantesController@asistenciaByStudent');
+Route::post('/estudiantes/getasistenciabystudent', 'EstudiantesController@getAsistencia');
+
+Route::post('/estudiantes/setcalificacionbystudent/', 'EstudiantesController@setCalificacionByStudent');
+Route::post('/estudiantes/getcalificacionbystudent', 'EstudiantesController@getCalificacionByStudent');
 
 
 Route::post('/documentos/{id}', 'EstudiantesController@storeDocuments' );
 Route::get('/documentos/{id}', 'EstudiantesController@getDocuments' );
+
 
 
 
