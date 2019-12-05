@@ -53,7 +53,7 @@ class ProfesoresController extends Controller
         $profesor->hv_propia = 1;
         $profesor->empresa = $request->empresa;
         $profesor->eps = $request->eps;
-        $profesor->fecha_nacimiento = $request->fechaNacimiento;
+        $profesor->fecha_nacimiento = $request->fechaNacimiento['year'].'-'.$request->fechaNacimiento['month'].'-'.$request->fechaNacimiento['day'];
         $profesor->genero = $request->genero;
         $profesor->lugarExpedicion_doc = $request->lugarExpedicionDocumento;
         $profesor->lugar_nacimiento = $request->lugarNacimiento;
@@ -72,7 +72,6 @@ class ProfesoresController extends Controller
             $message->subject('Cuenta de Iniciacion Deportiva');
             $message->to($request->correo);
         });
-        
         return response()
          ->json(['status' => '200', 'data' => "guardado"]);
     }

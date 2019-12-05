@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -20,7 +19,7 @@ class UsuariosController extends Controller
         $usuarios = DB::table('usuarios')
         ->join('personas', 'personas.Usuarios_id_usuario', '=', 'usuarios.id_usuario')
         ->join('roles', 'usuarios.Roles_id_rol', '=', 'roles.id_rol')
-        ->select('usuarios.*','personas.nombre_completo','personas.apellidos','personas.numero_doc','roles.rol')
+        ->select('usuarios.*','personas.nombre_completo','personas.apellidos','personas.numero_doc','roles.rol','roles.id_rol')
         ->where('personas.hv_propia','=',1)
         ->get();
         return $usuarios;
@@ -34,10 +33,7 @@ class UsuariosController extends Controller
      */
     public function store(Request $request)
     {
-        
         //verificar el token
-
-
         $usuario =  Usuarios::where('correo', $request->email)->first();
         if($usuario)
         {
@@ -64,8 +60,6 @@ class UsuariosController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -73,7 +67,6 @@ class UsuariosController extends Controller
     {
         //
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -114,13 +107,17 @@ class UsuariosController extends Controller
         $usuario->nombre = $request->nombre ;
         $usuario->apellidos = $request->apellido;
         $usuario->password = $request->password;
+        if($request->rol)
+        {
+            $usuario->Roles_id_rol = $request->rol;    
+        }
         $usuario->Roles_id_rol = 3;
         $usuario->url =  base64_encode($usuario->correo.$usuario->provider.$usuario->nombre);
         $usuario->estado = 0;
         $usuario->save();
 
         $bodyMail="
-        Para verificar su correo ingrese al siguiente link ".$usuario->url;
+        Para verificar su correo ingrese al siguiente link http://backendeid.com/usuario/validateurl/".$usuario->url;
         Mail::raw($bodyMail, function ($message) use ($usuario){
                 $message->subject('Cuenta de Iniciacion Deportiva');
                 $message->to($usuario->correo);
@@ -161,12 +158,11 @@ class UsuariosController extends Controller
             'id' => $user->id,
             'token' => $user->token,
             'idToken' => $user->id_token,
-            'name' => $user->correo,
-            'provider' => $user->nombre." ".$user->apellidos,
+            'name' => $user->nombre." ".$user->apellidos,
+            'provider' => $user->provider,
             'rol' => $user->Roles_id_rol
         ]; 
         return $usuarioStandar;
-
     }
 
     public function validateUrl($id)
@@ -179,5 +175,26 @@ class UsuariosController extends Controller
         {
             return "";
         }
+    }
+    public function updateUser(Request $request)
+    {
+
+        $usuario = Usuarios::where('correo',$request->correo)->update(
+            [
+            "usuario"=>$request->correo,
+            "nombre" => $request->nombre,
+            "apellidos" => $request->apellido,
+            "password" => $request->password,
+            "Roles_id_rol" =>  $request->rol
+            ]);
+        return response()
+            ->json(['status' => '200']);
+    }
+    public function deleteUser(Request $request)
+    {
+
+        $usuario = Usuarios::where('correo',$request->correo)->delete();
+        return response()
+            ->json(['status' => '200']);
     }
 }

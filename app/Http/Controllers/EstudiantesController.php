@@ -10,6 +10,7 @@ use App\Usuarios;
 use App\asistencias;
 use App\personas_has_cursos;
 use App\Evaluaciones;
+use App\cursos;
 use App\Evaluaciones_has_objetivos;
 
 
@@ -65,63 +66,20 @@ class EstudiantesController extends Controller
         $estudiante->direccion_residencia = $request->direccionResidencia;
         $estudiante->parentezco = $request->parentezco;
         $estudiante->hv_propia = 0;
-        //emailAddress correo acudiente
         $estudiante->empresa = $request->empresa;
         $estudiante->tipo_vinsulacion = $request->tipoVinculacion;
         $estudiante->programa = $request->programa;
         $estudiante->documentos = $request->documentos;
         $estudiante->foto = $request->foto;
-        // $encodedData = strtr($request->foto, '-_', '+/');
-        // $encodedData = explode(',', $request->foto);
-        // $estudiante->foto = base64_decode(utf8_encode($encodedData[1]));
-        //$estudiante->foto = base64_decode($request->foto);
-        // $base64_str = substr($arc->document3, strpos($arc->document3, ",")+1);
-    
-        // $decoded = base64_decode($encodedData);
         $estudiante->Usuarios_id_usuario = $usuario->id_usuario;
         $estudiante->save();
         $matricula = new personas_has_cursos;
         $matricula->Cursos_id_curso = $request->programa;
         $matricula->Personas_numero_doc = $request->numeroDocumento;
         $matricula->save();
-
-
-//
-/*      $estudiante = new personas;
-        $estudiante->tipo_doc=  $request->tipoDocumento;
-        $estudiante->numero_doc= $request->numeroDocumento;
-        $estudiante->lugarExpedicion_doc = $request->lugarExpedicionDocumento;
-        $estudiante->nombre_completo = $request->nombreCompleto;
-        $estudiante->apellidos =$request->apellidos;
-        $estudiante->fecha_nacimiento = $request->fechaNacimiento;
-        $estudiante->lugar_nacimiento = $request->lugarNacimiento;
-        $estudiante->genero = $request->genero;
-        $estudiante->telefono = $request->telefono;
-        $estudiante->correo = $request->correo;
-        $estudiante->estudia =$request->estudia;
-        $estudiante->grado_escolar = $request->gradoEscolar;
-        $estudiante->nombre_establecimiento = $request->nombreEstablecimiento;
-        $estudiante->tipo_establecimiento =$request->tipoEstablecimiento;
-        $estudiante->eps =$request->eps;
-        $estudiante->nombre_padre=$request->nombrePadre;
-        $estudiante->telefono_padre =$request->celularPadre;
-        $estudiante->nombre_madre =$request->nombreMadre;
-        $estudiante->telefono_madre = $request->celularMadre;
-        $estudiante->nombre_acudiente = $request->nombreAcudiente;
-        $estudiante->celular_acudiente = $request->celular;
-
-        //emailAddress correo acudiente
-        $estudiante->empresa = $request->empresa;
-        $estudiante->tipo_vinsulacion = $request->tipoVinculacion;
-        $estudiante->programa = $request->programa;
-        $estudiante->documentos = $request->documentos;
-        $estudiante->antecedentes_salud = $request->antecedentes_salud;
-        $estudiante->actividad_deportiva = $request->actividad_deportiva;
-        $estudiante->empresa_usuario = $request->empresa_usuario;
-        $estudiante->foto = $request->foto;
-        $estudiante->Personas_numero_doc = $request->Personas_numero_doc;
-        $estudiante->save();
- */
+        $cursos = cursos::where("id_curso",$matricula->Cursos_id_curso)->first();
+        $cursos->cupos  = $cursos->cupos -1;
+        $cursos->save();
 
     }
 
@@ -268,6 +226,10 @@ class EstudiantesController extends Controller
     $matricula->Personas_numero_doc = $request->numeroDocumento;
     $matricula->save();
 
+    $cursos = cursos::where("id_curso",$matricula->Cursos_id_curso)->first();
+    $cursos->cupos  = $cursos->cupos -1;
+    $cursos->save();
+
     return response()
         ->json(['status' => '200', 'response' => 'Guardado']);
    }
@@ -351,7 +313,7 @@ class EstudiantesController extends Controller
         $bodyMail="
             Se ha hecho la siguiente observacion sobre el estudiante con documento ".$evaluacion->numero_doc."
             \n".$evaluacion->observacion;
-        Mail::raw($bodyMail, function ($message) use ($request){
+        Mail::raw($bodyMail, function ($message) use ($request,$email){
                 $message->subject('Cuenta de Iniciacion Deportiva');
                 $message->to($email);
             });

@@ -39,6 +39,9 @@ Route::apiResource('/usuario', 'UsuariosController' );
 Route::post('/usuario/login', 'UsuariosController@login' );
 Route::post('/usuario/register', 'UsuariosController@register' );
 Route::get('/usuario/validateurl/{id}', 'UsuariosController@validateUrl' );
+Route::post('/usuario/update', 'UsuariosController@updateUser' );
+Route::post('/usuario/delete', 'UsuariosController@deleteUser' );
+
 
 Route::apiResource('/cursos', 'CursosController' );
 
