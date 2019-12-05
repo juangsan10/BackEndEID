@@ -28,6 +28,10 @@ class EstudiantesController extends Controller
         ->join('personas', 'personas.numero_doc', '=', 'personas_has_cursos.Personas_numero_doc')
         ->join('usuarios', 'personas.Usuarios_id_usuario', '=', 'usuarios.id_usuario')
         ->select('personas.*')
+        ->where(function ($query) {
+            $query->where('usuarios.Roles_id_rol', '!=', 2)
+                  ->orWhere('personas.hv_propia', '!=', 1);
+        })
         ->get();
         return $estudiantesAndCurso;
     }
