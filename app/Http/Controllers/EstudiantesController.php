@@ -306,7 +306,7 @@ class EstudiantesController extends Controller
         $evaluacion = new Evaluaciones;
         $id_profesor = DB::table('usuarios')
         ->join('personas', 'personas.Usuarios_id_usuario', '=', 'usuarios.id_usuario')
-        ->select('personas.numero_doc','usuarios.correo')
+        ->select('personas.numero_doc')
         ->where('personas.hv_propia', '=',1)
         ->where('usuarios.Roles_id_rol', '=',2)
         ->where('usuarios.correo', '=', $request->idProfesor)->first();
@@ -326,9 +326,12 @@ class EstudiantesController extends Controller
             $evaluacion_objetivo->save();
         }
         
-        $usuario = Personas::where("numero_doc",$evaluacion->Personas_has_Cursos_Personas_numero_doc)->first();
+        $usuarioNotas = DB::table('usuarios')
+        ->join('personas', 'personas.Usuarios_id_usuario', '=', 'usuarios.id_usuario')
+        ->select('usuarios.correo')
+        ->where('personas.numero_doc', '=', $evaluacion->Personas_has_Cursos_Personas_numero_doc)->first();
         $email ="";
-        $email = $id_profesor->correo;
+        $email = $usuarioNotas->correo;
        
         $bodyMail="
             Se ha hecho la siguiente observacion sobre el estudiante con documento ".$evaluacion->Personas_has_Cursos_Personas_numero_doc."
