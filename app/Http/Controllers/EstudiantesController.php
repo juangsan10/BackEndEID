@@ -51,7 +51,7 @@ class EstudiantesController extends Controller
         $estudiante->lugarExpedicion_doc = $request->lugarExpedicionDocumento;
         $estudiante->nombre_completo = $request->nombreCompleto;
         $estudiante->apellidos =$request->apellidos;
-        $estudiante->fecha_nacimiento = $request->fechaNacimiento;
+        $estudiante->fecha_nacimiento =$request->fechaNacimiento['year'].'-'.$request->fechaNacimiento['month'].'-'.$request->fechaNacimiento['day']; 
         $estudiante->lugar_nacimiento = $request->lugarNacimiento;
         $estudiante->genero = $request->genero;
         $estudiante->telefono = $request->telefono;
