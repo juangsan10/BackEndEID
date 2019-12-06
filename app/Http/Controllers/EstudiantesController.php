@@ -342,22 +342,30 @@ class EstudiantesController extends Controller
             });
         
      return response()
-     ->json(['status' => '200', 'response' => 'Asistencia guardada correctamente']);
+     ->json(['status' => '200', 'response' => 'calificacion guardada correctamente']);
      }
 
     public function getCalificacionByStudent(Request $request)
     {
+        $responseCalificaciones = array();
+        $index = 0;
         $calificaciones = DB::table('evaluaciones')
-        ->join('evaluaciones_has_objetivos', 'evaluaciones_has_objetivos.Evaluaciones_id_evaluacion', '=', 'evaluaciones.id_evaluacion')
-        ->join('objetivos', 'objetivos.id_objetivo', '=', 'evaluaciones_has_objetivos.objetivos_id_objetivo')
         ->join('cursos', 'cursos.id_curso', '=', 'evaluaciones.Personas_has_Cursos_Cursos_id_curso')
-        ->select('evaluaciones.observacion','objetivos.nombre','evaluaciones_has_objetivos.nota')
+        ->select('evaluaciones.*')
         ->where('cursos.estado', '=',1)
         ->where('evaluaciones.Personas_has_Cursos_Personas_numero_doc', '=', $request->doc)
         ->where('evaluaciones.Personas_has_Cursos_Cursos_id_curso', '=', $request->idCurso)->get();
 
+        foreach ($calificaciones as $calificacion ) {
+            $responseCalificaciones[$index] = ["calificacion" => $calificacion,"objetivos" =>  DB::table('evaluaciones_has_objetivos')
+                ->join('objetivos', 'objetivos.id_objetivo', '=', 'evaluaciones_has_objetivos.objetivos_id_objetivo')
+                ->select('objetivos.nombre','evaluaciones_has_objetivos.nota')
+                ->where("evaluaciones_has_objetivos.Evaluaciones_id_evaluacion","=",$calificacion->id_evaluacion)
+                ->get()];                
+                $index = $index +1;
+        }
      return response()
-     ->json(['status' => '200', 'data' => $calificaciones]);
+     ->json(['status' => '200', 'data' => $responseCalificaciones]);
      }
 
      public function getAsistencia(Request $request)
