@@ -46,6 +46,15 @@ class EstudiantesController extends Controller
     {
         $estudiante = new personas;
         $usuario = Usuarios::where("correo",$request->emailAddress)->first();
+        if(!$usuario)
+        {
+            $usuario = new Usuarios;
+            $usuario->correo = $request->emailAddress;
+            $usuario->nombre = $request->nombreAcudiente;
+            $usuario->Roles_id_rol = 3;
+            $usuario->save();
+        }
+  
         $estudiante->tipo_doc=  $request->tipoDocumento;
         $estudiante->numero_doc= $request->numeroDocumento;
         $estudiante->lugarExpedicion_doc = $request->lugarExpedicionDocumento;
@@ -82,8 +91,14 @@ class EstudiantesController extends Controller
         $matricula->Personas_numero_doc = $request->numeroDocumento;
         $matricula->save();
         $cursos = cursos::where("id_curso",$matricula->Cursos_id_curso)->first();
-        $cursos->cupos  = $cursos->cupos -1;
-        $cursos->save();
+        $cuposCurso  = $cursos->cupos -1;
+        cursos::where("id_curso",$matricula->Cursos_id_curso)->update(["cupos"=>$cuposCurso]);
+        $bodyMail="
+        El estudiante  ".$request->nombreCompleto." se ha matricula en el curso ".$cursos->nombre;
+        Mail::raw($bodyMail, function ($message) use ($request){
+            $message->subject('Cuenta de Iniciacion Deportiva');
+            $message->to($request->emailAddress);
+        });
 
     }
 
@@ -205,7 +220,7 @@ class EstudiantesController extends Controller
     $estudiante->nombre_acudiente = $request->nombreAcudiente;
     $estudiante->celular_acudiente = $request->celular;
     $estudiante->hv_propia = 1;
-    //emailAddress correo acudiente
+    // 
     $estudiante->empresa = $request->empresa;
     $estudiante->tipo_vinsulacion = $request->tipoVinculacion;
     $estudiante->programa = $request->programa;
@@ -231,8 +246,14 @@ class EstudiantesController extends Controller
     $matricula->save();
 
     $cursos = cursos::where("id_curso",$matricula->Cursos_id_curso)->first();
-    $cursos->cupos  = $cursos->cupos -1;
-    $cursos->save();
+    $cuposCurso  = $cursos->cupos -1;
+    cursos::where("id_curso",$matricula->Cursos_id_curso)->update(["cupos"=>$cuposCurso]);
+    $bodyMail="
+    El estudiante  ".$request->nombreCompleto." se ha matricula en el curso ".$cursos->nombre;
+    Mail::raw($bodyMail, function ($message) use ($request){
+        $message->subject('Cuenta de Iniciacion Deportiva');
+        $message->to($request->emailAddress);
+    });
 
     return response()
         ->json(['status' => '200', 'response' => 'Guardado']);
@@ -285,7 +306,7 @@ class EstudiantesController extends Controller
         $evaluacion = new Evaluaciones;
         $id_profesor = DB::table('usuarios')
         ->join('personas', 'personas.Usuarios_id_usuario', '=', 'usuarios.id_usuario')
-        ->select('personas.numero_doc')
+        ->select('personas.numero_doc','usuarios.correo')
         ->where('personas.hv_propia', '=',1)
         ->where('usuarios.Roles_id_rol', '=',2)
         ->where('usuarios.correo', '=', $request->idProfesor)->first();
@@ -307,15 +328,10 @@ class EstudiantesController extends Controller
         
         $usuario = Personas::where("numero_doc",$evaluacion->Personas_has_Cursos_Personas_numero_doc)->first();
         $email ="";
-        if($usuario->hv_propia == 1)
-        {
-            $email = $usuario->correo;
-        }else
-        {
-            $email =  $usuario->emailAddress;
-        }
+        $email = $id_profesor->correo;
+       
         $bodyMail="
-            Se ha hecho la siguiente observacion sobre el estudiante con documento ".$evaluacion->numero_doc."
+            Se ha hecho la siguiente observacion sobre el estudiante con documento ".$evaluacion->Personas_has_Cursos_Personas_numero_doc."
             \n".$evaluacion->observacion;
         Mail::raw($bodyMail, function ($message) use ($request,$email){
                 $message->subject('Cuenta de Iniciacion Deportiva');
